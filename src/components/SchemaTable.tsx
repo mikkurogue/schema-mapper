@@ -42,6 +42,7 @@ const SchemaTable = (props: Props) => {
     exportToExcel(props.fileName, tableData);
   };
 
+  // TODO: figure out how we can maintain data and not re-set it each time we swap
   useEffect(() => {
     if (props.activeSheet === "Shipments") {
       setTableData(props.data.shipments);
