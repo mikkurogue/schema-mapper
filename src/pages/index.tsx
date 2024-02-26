@@ -49,6 +49,18 @@ export default function Home() {
     setExcelData({ shipments, emissionAssets });
   };
 
+  useEffect(() => {
+    console.log("sheet", activeSheet);
+
+    if (activeSheet === "Shipments") {
+      console.log("we are in shipms");
+    }
+
+    if (activeSheet === "Emission assets") {
+      console.log("we are in assets");
+    }
+  }, [activeSheet]);
+
   return (
     <>
       <Group p={15}>
