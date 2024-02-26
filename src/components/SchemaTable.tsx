@@ -2,10 +2,12 @@ import "@mantine/core/styles.css";
 import "mantine-react-table/styles.css";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { MRT_TableOptions, MantineReactTable, useMantineReactTable, type MRT_ColumnDef } from "mantine-react-table";
-import { generateColumnNamesFromFile } from "./SchemaTable/utility/generateColumns";
-import { Button } from "@mantine/core";
-import { IconDownload, IconPlus } from "@tabler/icons-react";
+import { Button, rem } from "@mantine/core";
+import { IconCheck, IconDownload, IconFileDownload, IconPlus } from "@tabler/icons-react";
 import { exportToExcel } from "./SchemaTable/utility/exportToExcel";
+import _ from "lodash";
+import { generateColumnNamesFromFile } from "./SchemaTable/utility/generateColumns";
+import { notifications } from "@mantine/notifications";
 
 type Props = {
   data: any;
@@ -22,8 +24,9 @@ type Props = {
 };
 
 const SchemaTable = (props: Props) => {
-  const [combinedData, setCombinedData] = useState<any[]>([{ shipments: props.shipments, emissionAssets: props.emissionAssets }] || []);
+  const [combinedData, setCombinedData] = useState<any>([{ shipments: props.shipments, emissionAssets: props.emissionAssets }] || []);
   const [editedRows, setEditedRows] = useState<Record<string, any>>({});
+
   // Memoize the columns we generate from our input file
   const columns = useMemo<MRT_ColumnDef<any>[]>(() => {
     if (props.activeSheet === "Shipments") {
@@ -38,6 +41,9 @@ const SchemaTable = (props: Props) => {
   }, [props.activeSheet]);
 
   const handleCreateRow: MRT_TableOptions<any>["onCreatingRowSave"] = async ({ values, exitCreatingMode }) => {
+    let shipments = [...props.shipments, values];
+    let emissionAssets = [...props.emissionAssets, values];
+
     if (props.activeSheet === "Shipments") {
       props.setShipments((prev: any) => [...prev, values]);
     }
@@ -47,29 +53,53 @@ const SchemaTable = (props: Props) => {
 
     setCombinedData([
       {
-        shipments: props.shipments,
-        emissionAssets: props.emissionAssets,
+        shipments: shipments,
+        emissionAssets: emissionAssets,
       },
     ]);
 
     exitCreatingMode();
   };
 
-  const convertAndDownloadExcel = () => {
-    console.log(combinedData);
-    // exportToExcel(props.fileName, combinedData);
+  const handleSaveRow = () => {
+    if (props.activeSheet === "Shipments") {
+      const merged = _.merge([], props.shipments, editedRows);
+
+      setCombinedData([
+        {
+          shipments: merged,
+          emissionAssets: props.emissionAssets,
+        },
+      ]);
+
+      props.setShipments(merged);
+    }
+
+    if (props.activeSheet === "Emission assets") {
+      const merged = _.merge([], props.emissionAssets, editedRows);
+
+      setCombinedData([
+        {
+          shipments: props.shipments,
+          emissionAssets: merged,
+        },
+      ]);
+
+      props.setEmissionAssets(merged);
+    }
+
+    setEditedRows({});
+    notifications.show({
+      title: `Success`,
+      color: "green",
+      message: `Saved sheet ${props.activeSheet}`,
+      icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+    });
   };
 
-  // TODO: figure out how we can maintain data and not re-set it each time we swap
-  //   useEffect(() => {
-  //     if (props.activeSheet === "Shipments") {
-  //       setTableData(props.shipments);
-  //     }
-
-  //     if (props.activeSheet === "Emission assets") {
-  //       setTableData(props.emissionAssets);
-  //     }
-  //   }, [props.activeSheet]);
+  const convertAndDownloadExcel = () => {
+    exportToExcel(props.fileName, combinedData);
+  };
 
   const table = useMantineReactTable({
     columns,
@@ -77,6 +107,7 @@ const SchemaTable = (props: Props) => {
     editDisplayMode: "cell",
     createDisplayMode: "row",
     onCreatingRowSave: handleCreateRow,
+    onEditingRowSave: handleSaveRow,
     renderTopToolbarCustomActions: ({ table }) => {
       return (
         <>
@@ -99,9 +130,9 @@ const SchemaTable = (props: Props) => {
     renderBottomToolbarCustomActions: () => {
       return (
         <>
-          {/* <Button variant="outline" disabled={editedRows.length === 0} onClick={handleSaveEditedRows}>
+          <Button variant="outline" disabled={Object.keys(editedRows).length === 0} onClick={handleSaveRow}>
             Save
-          </Button> */}
+          </Button>
           {props.selector}
         </>
       );
