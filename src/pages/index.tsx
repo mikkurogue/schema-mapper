@@ -12,6 +12,9 @@ export default function Home() {
   const [activeSheet, setActiveSheet] = useState<string>("");
   const [excelData, setExcelData] = useState<any>(null);
 
+  const [shipments, setShipments] = useState<any[]>([]);
+  const [emissionAssets, setEmissionAssets] = useState<any[]>([]);
+
   const [filename, setFilename] = useState<string>("input.xlsx");
 
   const handleFile = async (e: any) => {
@@ -43,10 +46,14 @@ export default function Home() {
     setSheets(workbook.SheetNames);
     setActiveSheet(workbook.SheetNames[0]);
 
-    const shipments = XLSX.utils.sheet_to_json(workbook.Sheets["Shipments"]);
-    const emissionAssets = XLSX.utils.sheet_to_json(workbook.Sheets["Emission assets"]);
+    // Make sure we set that any non-value becomes an empty string, so we can process columns without values too
+    const shipments = XLSX.utils.sheet_to_json(workbook.Sheets["Shipments"], { defval: "" });
+    const emissionAssets = XLSX.utils.sheet_to_json(workbook.Sheets["Emission assets"], { defval: "" });
 
     setExcelData({ shipments, emissionAssets });
+
+    setShipments(shipments);
+    setEmissionAssets(emissionAssets);
   };
 
   return (
@@ -57,8 +64,19 @@ export default function Home() {
       <Flex direction={"column"} p={15} gap={10}>
         {typeError && <Alert color="red">{typeError}</Alert>}
 
-        {excelData && <SchemaTable data={excelData} sheets={sheets} activeSheet={activeSheet} fileName={filename} />}
-        {excelData && <SchemaTableSheetSelector activeSheet={activeSheet} setActiveSheet={setActiveSheet} allSheets={sheets} />}
+        {excelData && (
+          <SchemaTable
+            data={excelData}
+            shipments={shipments}
+            emissionAssets={emissionAssets}
+            setShipments={setShipments}
+            setEmissionAssets={setEmissionAssets}
+            sheets={sheets}
+            activeSheet={activeSheet}
+            fileName={filename}
+            selector={<SchemaTableSheetSelector activeSheet={activeSheet} setActiveSheet={setActiveSheet} allSheets={sheets} />}
+          />
+        )}
       </Flex>
     </>
   );

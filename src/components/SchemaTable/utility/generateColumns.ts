@@ -3,7 +3,7 @@ import { MRT_ColumnDef } from "mantine-react-table";
 /**
  * Generate all existing columns from input file
  */
-export function generateColumnNamesFromFile(input: any): MRT_ColumnDef<any>[] {
+export function generateColumnNamesFromFile(input: any, setter: any, editedRows: any): MRT_ColumnDef<any>[] {
   if (!input) {
     return [];
   }
@@ -12,6 +12,12 @@ export function generateColumnNamesFromFile(input: any): MRT_ColumnDef<any>[] {
     return {
       accessorKey: item,
       header: item,
+      mantineEditTextInputProps: ({ cell, row }) => ({
+        type: "text",
+        onBlur: (event) => {
+          setter({ ...editedRows, [row.id]: { ...row.original, [cell.column.id]: event.target.value } });
+        },
+      }),
     };
   });
 }
