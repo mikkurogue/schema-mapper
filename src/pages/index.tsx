@@ -6,7 +6,6 @@ import SchemaTableSheetSelector from "@/components/SchemaTable/SchemaTableSheetS
 
 export default function Home() {
   // onchange states
-  const [excelFile, setExcelFile] = useState<any>(null);
   const [typeError, setTypeError] = useState<any>(null);
 
   const [sheets, setSheets] = useState<string[]>([]);
@@ -26,13 +25,11 @@ export default function Home() {
         reader.onload = async (e) => {
           // Move the file processing logic to a separate function to handle it asynchronously
           await processExcelFile(e?.target?.result);
-          setExcelFile(selectedFile);
         };
 
         setFilename(selectedFile.name);
       } else {
         setTypeError("Please select only excel file types");
-        setExcelFile(null);
       }
     } else {
       console.log("Please select your file");
