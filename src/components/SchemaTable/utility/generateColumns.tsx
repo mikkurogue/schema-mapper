@@ -75,6 +75,13 @@ export function generateColumnNamesFromFile(input: any, setter: any, editedRows:
         accessorKey: item,
         header: item,
         editVariant: "select",
+        Cell: ({ cell }) => {
+          const value = cell.getValue() as string;
+
+          const isError = value === "" || !countryCodes.find((c) => c === value);
+
+          return <td style={isError ? errorCellStyle : {}}>{value}</td>;
+        },
         mantineEditSelectProps: ({ cell, row }: any) => {
           return {
             data: countryCodes,
