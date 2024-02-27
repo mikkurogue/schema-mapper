@@ -10,6 +10,7 @@ const errorCellStyle = {
   width: "100%",
   minHeight: "35px",
   minWidth: "100px",
+  borderRadius: "6px",
 };
 
 /**
