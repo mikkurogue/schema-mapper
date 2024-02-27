@@ -24,9 +24,46 @@ export function generateColumnNamesFromFile(input: any, setter: any, editedRows:
   const { validations, setValidations } = validation;
 
   return Object.keys(input[0]).map((item) => {
+    //check if column is customer name
+    if (item.includes("customer_name")) {
+      return {
+        accessorKey: item,
+        header: item,
+        Cell: ({ cell }) => {
+          const value = cell.getValue() as string;
+
+          const isError = !value || value === "";
+
+          return <td style={isError ? errorCellStyle : {}}>{value}</td>;
+        },
+        mantineEditTextInputProps: ({ cell, row }) => {
+          return {
+            error: validations.customer_name,
+            type: "text",
+            onChange: (event: { currentTarget: { value: any } }) => {
+              const value = event.currentTarget.value;
+
+              if (!value) {
+                setValidations((prev: any) => ({ ...prev, date: "Customer name is required" }));
+              } else {
+                delete validations.customer_name;
+                setValidations({ ...validations });
+              }
+            },
+            onBlur: (event) => {
+              const value = event.target.value;
+
+              setter(() => {
+                notify(cell);
+                return { ...editedRows, [row.id]: { ...row.original, [cell.column.id]: value } };
+              });
+            },
+          };
+        },
+      };
+    }
+
     // check if column is date
-    // here we should check if the event.target.value is valid?
-    // figure out cell styling?
     if (item.includes("date")) {
       return {
         accessorKey: item,

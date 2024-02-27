@@ -2,7 +2,7 @@ import "@mantine/core/styles.css";
 import "mantine-react-table/styles.css";
 import { ReactNode, useMemo, useState } from "react";
 import { MRT_TableOptions, MantineReactTable, useMantineReactTable, type MRT_ColumnDef } from "mantine-react-table";
-import { Button, rem } from "@mantine/core";
+import { Button, Loader, Skeleton, rem } from "@mantine/core";
 import { IconCheck, IconDownload, IconPlus } from "@tabler/icons-react";
 import { exportToExcel } from "./SchemaTable/utility/exportToExcel";
 import _ from "lodash";

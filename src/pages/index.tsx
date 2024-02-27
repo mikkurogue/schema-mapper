@@ -1,7 +1,7 @@
 import SchemaTable from "@/components/SchemaTable";
 import * as XLSX from "xlsx";
 import { useEffect, useState } from "react";
-import { Alert, Container, FileInput, Flex, Group } from "@mantine/core";
+import { Alert, Container, FileInput, Flex, Group, Loader, Skeleton } from "@mantine/core";
 import SchemaTableSheetSelector from "@/components/SchemaTable/SchemaTableSheetSelector";
 
 export default function Home() {
@@ -17,12 +17,15 @@ export default function Home() {
 
   const [filename, setFilename] = useState<string>("input.xlsx");
 
+  const [processing, setProcessing] = useState<boolean>(false);
+
   const handleFile = async (e: any) => {
     let fileTypes = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
     let selectedFile = e.target.files[0];
     if (selectedFile) {
       if (selectedFile && fileTypes.includes(selectedFile.type)) {
         setTypeError(null);
+        setProcessing(true);
         let reader = new FileReader();
         reader.readAsArrayBuffer(selectedFile);
         reader.onload = async (e) => {
@@ -31,8 +34,10 @@ export default function Home() {
         };
 
         setFilename(selectedFile.name);
+        setProcessing(false);
       } else {
         setTypeError("Please select only excel file types");
+        setProcessing(false);
       }
     } else {
       console.log("Please select your file");
@@ -63,6 +68,8 @@ export default function Home() {
       </Group>
       <Flex direction={"column"} p={15} gap={10}>
         {typeError && <Alert color="red">{typeError}</Alert>}
+
+        {processing && <Loader size={"xl"} />}
 
         {excelData && (
           <SchemaTable
