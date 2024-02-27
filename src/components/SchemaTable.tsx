@@ -26,19 +26,22 @@ type Props = {
 const SchemaTable = (props: Props) => {
   const [combinedData, setCombinedData] = useState<any>([{ shipments: props.shipments, emissionAssets: props.emissionAssets }] || []);
   const [editedRows, setEditedRows] = useState<Record<string, any>>({});
+  const [validations, setValidations] = useState<any>({});
 
   // Memoize the columns we generate from our input file
   const columns = useMemo<MRT_ColumnDef<any>[]>(() => {
     if (props.activeSheet === "Shipments") {
-      return generateColumnNamesFromFile(props.shipments, setEditedRows, editedRows);
+      return generateColumnNamesFromFile(props.shipments, setEditedRows, editedRows, { validations, setValidations });
     }
 
     if (props.activeSheet === "Emission assets") {
-      return generateColumnNamesFromFile(props.emissionAssets, setEditedRows, editedRows);
+      return generateColumnNamesFromFile(props.emissionAssets, setEditedRows, editedRows, { validations, setValidations });
     }
 
     return [];
   }, [props.activeSheet]);
+
+  console.log(validations);
 
   const handleCreateRow: MRT_TableOptions<any>["onCreatingRowSave"] = async ({ values, exitCreatingMode }) => {
     let shipments = [...props.shipments, values];
