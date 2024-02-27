@@ -5,12 +5,13 @@ import { rem } from "@mantine/core";
 import { countryCodes } from "./countryCodes";
 
 const errorCellStyle = {
-  backgroundColor: "rgba(255, 99, 71, 0.5)",
+  backgroundColor: "rgba(255, 168, 168,1)",
   height: "35px",
   width: "100%",
   minHeight: "35px",
   minWidth: "100px",
   borderRadius: "6px",
+  display: "block",
 };
 
 /**
@@ -34,7 +35,7 @@ export function generateColumnNamesFromFile(input: any, setter: any, editedRows:
 
           const isError = !value || value === "";
 
-          return <td style={isError ? errorCellStyle : {}}>{value}</td>;
+          return <span style={isError ? errorCellStyle : {}}>{value}</span>;
         },
         mantineEditTextInputProps: ({ cell, row }) => {
           return {
@@ -74,7 +75,7 @@ export function generateColumnNamesFromFile(input: any, setter: any, editedRows:
           const isValidDate = !isNaN(new Date(value).getDate());
           const isError = !isValidDate || !value || value === "";
 
-          return <td style={isError ? errorCellStyle : {}}>{value}</td>;
+          return <span style={isError ? errorCellStyle : {}}>{value}</span>;
         },
         mantineEditTextInputProps: ({ cell, row }) => {
           return {
@@ -117,7 +118,7 @@ export function generateColumnNamesFromFile(input: any, setter: any, editedRows:
 
           const isError = value === "" || !countryCodes.find((c) => c === value);
 
-          return <td style={isError ? errorCellStyle : {}}>{value}</td>;
+          return <span style={isError ? errorCellStyle : {}}>{value}</span>;
         },
         mantineEditSelectProps: ({ cell, row }: any) => {
           return {
