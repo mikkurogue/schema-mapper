@@ -1,9 +1,16 @@
-import { notifications, showNotification } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import { MRT_ColumnDef } from "mantine-react-table";
 import { IconCheck } from "@tabler/icons-react";
-import { Box, rem } from "@mantine/core";
+import { rem } from "@mantine/core";
 import { countryCodes } from "./countryCodes";
-import { DatePickerInput } from "@mantine/dates";
+
+const errorCellStyle = {
+  backgroundColor: "rgba(255, 99, 71, 0.5)",
+  height: "35px",
+  width: "100%",
+  minHeight: "35px",
+  minWidth: "100px",
+};
 
 /**
  * Generate all existing columns from input file
@@ -23,6 +30,14 @@ export function generateColumnNamesFromFile(input: any, setter: any, editedRows:
       return {
         accessorKey: item,
         header: item,
+        Cell: ({ cell }) => {
+          const value = cell.getValue() as string;
+
+          const isValidDate = !isNaN(new Date(value).getDate());
+          const isError = !isValidDate || !value || value === "";
+
+          return <td style={isError ? errorCellStyle : {}}>{value}</td>;
+        },
         mantineEditTextInputProps: ({ cell, row }) => {
           return {
             error: validations.date,

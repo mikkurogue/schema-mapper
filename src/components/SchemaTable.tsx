@@ -1,9 +1,9 @@
 import "@mantine/core/styles.css";
 import "mantine-react-table/styles.css";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { MRT_TableOptions, MantineReactTable, useMantineReactTable, type MRT_ColumnDef } from "mantine-react-table";
 import { Button, rem } from "@mantine/core";
-import { IconCheck, IconDownload, IconFileDownload, IconPlus } from "@tabler/icons-react";
+import { IconCheck, IconDownload, IconPlus } from "@tabler/icons-react";
 import { exportToExcel } from "./SchemaTable/utility/exportToExcel";
 import _ from "lodash";
 import { generateColumnNamesFromFile } from "./SchemaTable/utility/generateColumns";
@@ -40,8 +40,6 @@ const SchemaTable = (props: Props) => {
 
     return [];
   }, [props.activeSheet]);
-
-  console.log(validations);
 
   const handleCreateRow: MRT_TableOptions<any>["onCreatingRowSave"] = async ({ values, exitCreatingMode }) => {
     let shipments = [...props.shipments, values];
