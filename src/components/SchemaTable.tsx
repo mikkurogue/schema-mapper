@@ -126,7 +126,6 @@ const SchemaTable = (props: Props) => {
         </>
       );
     },
-    // todo: figure out how we can apply the save to the sheet.
     renderBottomToolbarCustomActions: () => {
       return (
         <>
