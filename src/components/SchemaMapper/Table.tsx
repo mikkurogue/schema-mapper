@@ -1,5 +1,10 @@
 import React, { ReactNode, useMemo, useState } from "react";
-import { MRT_TableOptions, MantineReactTable, useMantineReactTable, type MRT_ColumnDef } from "mantine-react-table";
+import {
+  MRT_TableOptions,
+  MantineReactTable,
+  useMantineReactTable,
+  type MRT_ColumnDef,
+} from "mantine-react-table";
 import { generateCols } from "./TableUtil";
 import { IconDownload, IconPlus } from "@tabler/icons-react";
 
@@ -14,8 +19,8 @@ const Table = ({ data, activeSheet, selector }: TableProps) => {
   const [validations, setValidations] = useState<any>({});
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(() => {
-    return generateCols(data, setEditedRows, editedRows, { validations, setValidations });
-  }, []);
+    return generateCols(data, setEditedRows, editedRows, activeSheet);
+  }, [activeSheet]);
 
   const table = useMantineReactTable({
     columns,
@@ -29,7 +34,8 @@ const Table = ({ data, activeSheet, selector }: TableProps) => {
           <button
             onClick={() => {
               table.setCreatingRow(true);
-            }}>
+            }}
+          >
             Add new row
           </button>
 
@@ -44,7 +50,10 @@ const Table = ({ data, activeSheet, selector }: TableProps) => {
       return (
         <>
           {/* todo: create the save row button */}
-          <button disabled={Object.keys(editedRows).length === 0} onClick={() => {}}>
+          <button
+            disabled={Object.keys(editedRows).length === 0}
+            onClick={() => {}}
+          >
             Save row
           </button>
           {selector}

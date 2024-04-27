@@ -7,6 +7,8 @@ export default function Home() {
   const [activeSheet, setActiveSheet] = useState<string>("Sheet1");
   const [excelData, setExcelData] = useState<any>(null);
 
+  console.log(excelData);
+
   return (
     <>
       <Input

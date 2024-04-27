@@ -14,17 +14,22 @@ const errorCellStyle = {
   display: "block",
 };
 
-export function generateCols(input: any, setter: any, editedRows: any, validation?: { validations: any; setValidations: any }): MRT_ColumnDef<any>[] {
+export function generateCols(
+  input: any,
+  setter: any,
+  editedRows: any,
+  currentSheet: string
+): MRT_ColumnDef<any>[] {
   if (!input) {
+    console.error(
+      "No input found for uploaded spreadsheet. Try a different file."
+    );
     return [];
   }
 
-  const { validations, setValidations } = validation as { validations: any; setValidations: any };
+  const keys = Object.keys(input[currentSheet][0]);
 
-  const vals = Object.values(input) as any[][];
-  console.log("col vals");
-
-  return Object.keys(vals[0][0]).map((item) => {
+  return keys.map((item) => {
     return {
       accessorKey: item,
       header: item,
@@ -34,7 +39,13 @@ export function generateCols(input: any, setter: any, editedRows: any, validatio
           onBlur: (event) => {
             setter(() => {
               notify(cell);
-              return { ...editedRows, [row.id]: { ...row.original, [cell.column.id]: event.target.value } };
+              return {
+                ...editedRows,
+                [row.id]: {
+                  ...row.original,
+                  [cell.column.id]: event.target.value,
+                },
+              };
             });
           },
         };
