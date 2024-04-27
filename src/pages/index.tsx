@@ -3,6 +3,8 @@ import * as XLSX from "xlsx";
 import { useEffect, useState } from "react";
 import { Alert, Container, FileInput, Flex, Group, Loader, Skeleton } from "@mantine/core";
 import SchemaTableSheetSelector from "@/components/SchemaTable/SchemaTableSheetSelector";
+import Input from "@/components/SchemaMapper/Input";
+import Table from "@/components/SchemaMapper/Table";
 
 export default function Home() {
   // onchange states
@@ -18,7 +20,7 @@ export default function Home() {
   const [filename, setFilename] = useState<string>("input.xlsx");
 
   const [processing, setProcessing] = useState<boolean>(false);
-
+  /* 
   const handleFile = async (e: any) => {
     let fileTypes = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
     let selectedFile = e.target.files[0];
@@ -59,11 +61,22 @@ export default function Home() {
 
     setShipments(shipments);
     setEmissionAssets(emissionAssets);
-  };
+  }; */
+
+  console.log(excelData);
 
   return (
     <>
-      <Group p={15}>
+      <Input
+        processTracker={function (inp: boolean) {
+          console.log("nyi");
+        }}
+        setFile={setExcelData}
+      />
+
+      {excelData && <Table data={excelData} />}
+
+      {/*  <Group p={15}>
         <input type={"file"} placeholder={"Upload excel file"} required onChange={async (e) => await handleFile(e)} />
       </Group>
       <Flex direction={"column"} p={15} gap={10}>
@@ -84,7 +97,7 @@ export default function Home() {
             selector={<SchemaTableSheetSelector activeSheet={activeSheet} setActiveSheet={setActiveSheet} allSheets={sheets} />}
           />
         )}
-      </Flex>
+      </Flex> */}
     </>
   );
 }
