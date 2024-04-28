@@ -7,7 +7,7 @@ export default function Home() {
   const [activeSheet, setActiveSheet] = useState<string>("Sheet1");
   const [excelData, setExcelData] = useState<any>(null);
 
-  console.log(excelData);
+  console.log("edata", excelData);
 
   return (
     <>
@@ -21,6 +21,7 @@ export default function Home() {
       {excelData && (
         <Table
           data={excelData}
+          updateData={setExcelData}
           activeSheet={activeSheet}
           selector={
             <SheetSelector

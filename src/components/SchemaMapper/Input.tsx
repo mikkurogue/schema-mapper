@@ -10,12 +10,17 @@ type InputProps = {
 const Input = ({ processTracker, setFile }: InputProps) => {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     processTracker(true);
-    if (!e.target.files) throw new TypeError("No file can be found in DOM Event");
+    if (!e.target.files)
+      throw new TypeError("No file can be found in DOM Event");
 
     let spreadsheetFile = e.target.files[0];
 
+    if (!spreadsheetFile) return;
+
     if (!ALLOWED_FILE_TYPES.includes(spreadsheetFile.type)) {
-      throw new TypeError("Only spreadsheets are allowed, for instance xlsx or csv files.");
+      throw new TypeError(
+        "Only spreadsheets are allowed, for instance xlsx or csv files."
+      );
     }
 
     let reader = new FileReader();
@@ -26,7 +31,9 @@ const Input = ({ processTracker, setFile }: InputProps) => {
     processTracker(false);
   };
 
-  const processSpreadsheet = async (spreadsheetData: string | ArrayBuffer | null | undefined) => {
+  const processSpreadsheet = async (
+    spreadsheetData: string | ArrayBuffer | null | undefined
+  ) => {
     // if there is no data then we just return nothing
     if (spreadsheetData === null || spreadsheetData === undefined) return null;
 
@@ -35,7 +42,9 @@ const Input = ({ processTracker, setFile }: InputProps) => {
     const sheets: { [key: string]: unknown[] } = {};
 
     for (var sheet in workbook.Sheets) {
-      sheets[`${sheet}`] = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { defval: "" });
+      sheets[`${sheet}`] = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+        defval: "",
+      });
     }
 
     setFile(sheets);
