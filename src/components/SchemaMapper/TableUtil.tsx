@@ -2,7 +2,6 @@ import { notifications } from "@mantine/notifications";
 import { MRT_ColumnDef } from "mantine-react-table";
 import { IconCheck } from "@tabler/icons-react";
 import { rem } from "@mantine/core";
-import { countryCodes } from "../SchemaTable/utility/countryCodes";
 
 const errorCellStyle = {
   backgroundColor: "rgba(255, 168, 168,1)",
