@@ -14,3 +14,5 @@ that we want to see and can process.
     - Error cell
     - Error column name
 - Support multiple sheets ✅
+- Support row creation on sheet ✅
+- Support cell editing on sheet 
