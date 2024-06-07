@@ -15,4 +15,5 @@ that we want to see and can process.
     - Error column name
 - Support multiple sheets ✅
 - Support row creation on sheet ✅
-- Support cell editing on sheet 
+- Support cell editing on sheet
+- Make the repo an actual library instead of a standalone app
